@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교수 소개</title>
+  <style>
+    /* 기본 스타일 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      background: linear-gradient(160deg, #e8f4fc 0%, #f5f0ff 50%, #fff8f0 100%);
+      min-height: 100vh;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+
+    /* 페이지 전체 레이아웃 */
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 상단 제목 */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a365d;
+      letter-spacing: -0.02em;
+    }
+
+    .header p {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #5a6c7d;
+    }
+
+    /* 가운데 교수 소개 카드 */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(26, 54, 93, 0.1);
+      padding: 32px 28px;
+      width: 100%;
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4a90d9, #6b5b95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #1a365d;
+      margin-bottom: 4px;
+    }
+
+    .card .title {
+      font-size: 0.9rem;
+      color: #4a90d9;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .card .bio {
+      font-size: 0.95rem;
+      color: #5a6c7d;
+      text-align: left;
+      width: 100%;
+    }
+
+    .card .bio li {
+      margin-bottom: 8px;
+      list-style: none;
+      padding-left: 1.2em;
+      position: relative;
+    }
+
+    .card .bio li::before {
+      content: "•";
+      color: #4a90d9;
+      position: absolute;
+      left: 0;
+    }
+
+    /* 아래 이메일 버튼 */
+    .footer {
+      margin-top: 32px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .email-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: #2c5282;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 14px rgba(44, 82, 130, 0.35);
+    }
+
+    .email-btn:hover {
+      background: #1a365d;
+      transform: translateY(-2px);
+    }
+
+    .email-btn:active {
+      transform: translateY(0);
+    }
+
+    /* 알림 메시지 (JavaScript로 표시) */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a365d;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- 상단: 제목 -->
+    <header class="header">
+      <h1>교수 소개</h1>
+      <p>컴퓨터공학과</p>
+    </header>
+
+    <!-- 가운데: 교수 소개 카드 -->
+    <main class="card">
+      <div class="card-photo" aria-hidden="true">👨‍🏫</div>
+      <h2>홍길동</h2>
+      <p class="title">컴퓨터공학과 교수</p>
+      <ul class="bio">
+        <li>인공지능·머신러닝 연구</li>
+        <li>데이터 과학 및 소프트웨어 공학 강의</li>
+        <li>학생 지도 및 산학 협력 담당</li>
+      </ul>
+    </main>
+
+    <!-- 아래: 이메일 버튼 -->
+    <footer class="footer">
+      <button type="button" class="email-btn" id="emailBtn">
+        이메일 보내기
+      </button>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    // 교수 이메일 주소 (필요하면 여기만 수정하세요)
+    var professorEmail = "professor@university.ac.kr";
+
+    var emailBtn = document.getElementById("emailBtn");
+    var toast = document.getElementById("toast");
+
+    // 이메일 버튼 클릭 시 메일 앱 열기
+    emailBtn.addEventListener("click", function () {
+      window.location.href = "mailto:" + professorEmail;
+      showToast("메일 앱을 여는 중입니다.");
+    });
+
+    // 잠깐 보이는 안내 메시지
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(function () {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
